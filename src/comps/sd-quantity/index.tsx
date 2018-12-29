@@ -46,8 +46,8 @@ export default class SDQuantity extends Component<ISDQuantityProps, ISDQuantityS
   }
 
   render () {
-    const { max, min, disabled } = this.props
-    const { inputValue } = this.state
+    const { max = Number.MAX_SAFE_INTEGER, min = 0, disabled = false } = this.props
+    const { inputValue = '' } = this.state
       return (
       <View className='main-content'>
         <View className='main-btn iconfont icon-minus1' onClick={this.doMinus}></View>

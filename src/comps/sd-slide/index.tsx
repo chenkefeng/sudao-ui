@@ -31,15 +31,25 @@ export default class SDSlide extends Component<ISDSlideProps, ISDSlideState> {
   threshold: number = 0
   touchStartX: number = 0
 
+  isInTouch: boolean = false
+
   componentWillReceiveProps (nextProps) {
     const { slideWidth } = nextProps
     this.threshold = (slideWidth * 0.5) * windowWidth / 750
   }
 
   render () {
-    const { width, height, slideWidth } = this.props
-    const { outOfBounds, moveX } = this.state
+    const { width, height, slideWidth = 0 } = this.props
+    let { outOfBounds, moveX = 0 } = this.state
     this.threshold = (slideWidth * 0.5) * windowWidth / 750
+
+    if (!this.isInTouch) {
+      if (Math.abs(moveX) < Math.abs(this.threshold)) {
+        moveX = 0
+      } else {
+        moveX = -this.threshold * 2
+      }
+    }
     return (
       <MovableArea className='container'
                    style={`width:${width}rpx; height: ${height}rpx;`}>
@@ -81,6 +91,7 @@ export default class SDSlide extends Component<ISDSlideProps, ISDSlideState> {
   }
 
   handleTouchStart = (e) => {
+    this.isInTouch = true
     this.needHandle = undefined
     this.touchStartX = e.changedTouches[0].pageX
   }
@@ -88,6 +99,7 @@ export default class SDSlide extends Component<ISDSlideProps, ISDSlideState> {
   handleTouchEnd = (e) => {
     let touchEndX = e.changedTouches[0].pageX
     let touchStartX = this.touchStartX || touchEndX
+    this.isInTouch = false
     if (!this.needHandle) { return }
     let threshold = this.threshold
 
