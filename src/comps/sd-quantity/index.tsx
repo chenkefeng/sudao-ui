@@ -10,7 +10,9 @@ type ISDQuantityProps = {
   disabled: boolean,
   extData: any,
   onValueChange?: ((value: string, extData: any) => void),
-  onBoundary?: ((value: string, type: 'minus' | 'plus', extData: any) => void)
+  onBoundary?: ((value: string, type: 'minus' | 'plus', extData: any) => void),
+  isLogin: Boolean,
+  onLoginTrigger?:(() => void)
 }
 
 type ISDQuantityStates = {
@@ -24,7 +26,8 @@ export default class SDQuantity extends Component<ISDQuantityProps, ISDQuantityS
     min: 0,
     disabled: false,
     value: '',
-    extData: ''
+    extData: '',
+    isLogin: true
   }
 
   value: number | string = ''
@@ -60,7 +63,10 @@ export default class SDQuantity extends Component<ISDQuantityProps, ISDQuantityS
   doMinus = e => {
     e.stopPropagation()
     let value = this.value
-    const { max, min, disabled, extData } = this.props
+    const { max, min, disabled, extData, isLogin } = this.props
+    if (!isLogin) {
+      this.props.onLoginTrigger && this.props.onLoginTrigger();
+    }
     if (min > max || disabled) {
       return;
     }
@@ -90,7 +96,10 @@ export default class SDQuantity extends Component<ISDQuantityProps, ISDQuantityS
   doPlus = e => {
     e.stopPropagation()
     let value = this.value
-    const { max, min, disabled, extData } = this.props
+    const { max, min, disabled, extData, isLogin } = this.props
+    if (!isLogin) {
+      this.props.onLoginTrigger && this.props.onLoginTrigger();
+    }
     if (min > max || disabled) {
       return;
     }
@@ -118,6 +127,13 @@ export default class SDQuantity extends Component<ISDQuantityProps, ISDQuantityS
 
   onInputChange = e => {
     e.stopPropagation()
+    const {isLogin} = this.props
+    if (!isLogin) {
+      this.props.onLoginTrigger && this.props.onLoginTrigger();
+      return {
+        value: this.state.inputValue
+      }
+    }
     let inputVal: any = e.detail.value || ''
     inputVal = inputVal.replace(/\s*/ig, '')
     if(inputVal.length == 0){

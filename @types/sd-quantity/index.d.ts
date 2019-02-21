@@ -7,7 +7,9 @@ export interface ISDQuantityProps  {
   disabled?: boolean,
   extData?: any,
   onValueChange?: ((value: string, extData: any) => void),
-  onBoundary?: ((value: string, type: 'minus' | 'plus', extData: any) => void)
+  onBoundary?: ((value: string, type: 'minus' | 'plus', extData: any) => void),
+  isLogin?: Boolean,
+  onLoginTrigger?:(() => void)
 }
 
 declare const SDQuantity: ComponentClass<ISDQuantityProps>
