@@ -49,12 +49,12 @@ export default class SDQuantity extends Component<ISDQuantityProps, ISDQuantityS
   }
 
   render () {
-    const { max = Number.MAX_SAFE_INTEGER, min = 0, disabled = false } = this.props
+    const { max = Number.MAX_SAFE_INTEGER, min = 0, disabled = false, isLogin = true } = this.props
     const { inputValue = '' } = this.state
       return (
       <View className='main-content'>
         <View className='main-btn iconfont icon-minus1' onClick={this.doMinus}></View>
-        <Input className='main-input' value={`${inputValue}`} disabled={min > max || disabled} onInput={this.onInputChange} onClick={this.handleInputTap} onBlur={this.onInputBlur} />
+        <Input className='main-input' value={`${inputValue}`} disabled={min > max || disabled || !isLogin} onInput={this.onInputChange} onClick={this.handleInputTap} onBlur={this.onInputBlur} />
         <View className='main-btn iconfont icon-add' onClick={this.doPlus}></View>
       </View>
     )
@@ -66,12 +66,13 @@ export default class SDQuantity extends Component<ISDQuantityProps, ISDQuantityS
     const { max, min, disabled, extData, isLogin } = this.props
     if (!isLogin) {
       this.props.onLoginTrigger && this.props.onLoginTrigger();
+      return
     }
     if (min > max || disabled) {
-      return;
+      return
     }
 
-    value = parseInt(`${value}`);
+    value = parseInt(`${value}`)
     value = isNaN(value) ? 0 : value
     value -= 1
 
@@ -98,7 +99,8 @@ export default class SDQuantity extends Component<ISDQuantityProps, ISDQuantityS
     let value = this.value
     const { max, min, disabled, extData, isLogin } = this.props
     if (!isLogin) {
-      this.props.onLoginTrigger && this.props.onLoginTrigger();
+      this.props.onLoginTrigger && this.props.onLoginTrigger()
+      return
     }
     if (min > max || disabled) {
       return;
@@ -127,13 +129,6 @@ export default class SDQuantity extends Component<ISDQuantityProps, ISDQuantityS
 
   onInputChange = e => {
     e.stopPropagation()
-    const {isLogin} = this.props
-    if (!isLogin) {
-      this.props.onLoginTrigger && this.props.onLoginTrigger();
-      return {
-        value: this.state.inputValue
-      }
-    }
     let inputVal: any = e.detail.value || ''
     inputVal = inputVal.replace(/\s*/ig, '')
     if(inputVal.length == 0){
